@@ -30,17 +30,20 @@ function Pokecard() {
                 <div className="poke-name">
                   <p>{pokemon.name.toUpperCase()}</p>
                 </div>
-                <div>
+                <div className = "poke-type-area">
                   {
                     pokemon.pokemon_v2_pokemontypes.map((poke_types)=>{
                       return(
-                        <span>
+                          <div className= {`poke-type ${poke_types.pokemon_v2_type.name}`}>
+                              <span>
                           {poke_types.pokemon_v2_type.name}
-                          {" "}
-                        </span>
+                            <br/>
+                          </span>
+                          </div>
                       )
                     })
                   }
+                  
                 </div>
               </div>
             );
