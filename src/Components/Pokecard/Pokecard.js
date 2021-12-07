@@ -1,9 +1,10 @@
-import React from "react";
+import React,{useState} from "react";
 import { gql, useQuery } from "@apollo/client";
 import "./pokecard-style.css";
+import axios from "axios";
 const GET_POKEMON = gql`
   query samplePokeAPIquery {
-    pokemon_v2_pokemon {
+    pokemon_v2_pokemon(limit: 3) {
       id
       name
       pokemon_v2_pokemontypes {
@@ -15,10 +16,20 @@ const GET_POKEMON = gql`
   }
 `;
 
-function Pokecard() {
-  const { error, loading, data } = useQuery(GET_POKEMON);
-  console.log({ error, loading, data });
+function GET_POKEMON_SPRITE(id){
+  const [sprite,setSprite] = useState("");
+   axios.get("https://pokeapi.co/api/v2/pokemon/"+id).then((res)=>{
+      setSprite(res.data.sprites.front_default);
+   })
+   return(
+     <img src={sprite}/>
+   )
+}
+                      
 
+function Pokecard() {
+  const { loading, data } = useQuery(GET_POKEMON);
+  
   return (
     <div className="poke-card-wrapper row">
       {
@@ -29,6 +40,10 @@ function Pokecard() {
               <div className="poke-card">
                 <div className="poke-name">
                   <p>{pokemon.name.toUpperCase()}</p>
+                </div>
+                <div>
+                  {GET_POKEMON_SPRITE(pokemon.id)}
+                                     
                 </div>
                 <div className = "poke-type-area">
                   {
@@ -43,7 +58,6 @@ function Pokecard() {
                       )
                     })
                   }
-                  
                 </div>
               </div>
             );
