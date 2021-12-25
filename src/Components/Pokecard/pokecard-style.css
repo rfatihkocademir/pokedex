@@ -8,6 +8,9 @@
 }
 .poke-card{
     color:black;
+    display: block;
+    align-items: center;
+    justify-content:center;
     width: 20%;
     margin-left:3%;
     margin-right:3%;
@@ -22,10 +25,21 @@
 
     
 }
+.poke-sprite{
+    width: 256px;
+    height: 256px;
+}
+.poke-sprite-area {
+    height:60%;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    
+}
 .poke-type{
     width: 50%;
     border-radius:10px;
-    margin-top: 40%;
+    margin-top: 10%;
     margin-left: 5%;
     margin-right: 5%;
 }
