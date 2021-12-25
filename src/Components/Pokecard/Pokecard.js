@@ -18,6 +18,7 @@ const GET_POKEMON = gql`
 `;
 const Loading = () => {
   return(
+    // eslint-disable-next-line jsx-a11y/alt-text
     <img className="poke-loading" src="https://c.tenor.com/2lFt6lp1KaMAAAAj/run-pokemon.gif"/>
   )
 }
@@ -28,6 +29,7 @@ function POKEMONSPRITE(props){
       setSprite(res.data.sprites.front_default);
    })
    return(
+     // eslint-disable-next-line jsx-a11y/alt-text
      <img className="poke-sprite" src={sprite}/>
    )
 }
