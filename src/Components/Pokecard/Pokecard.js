@@ -4,10 +4,12 @@ import "./pokecard-style.css";
 import axios from "axios";
 
 const GET_POKEMON = gql`
-  query samplePokeAPIquery{
-  pokemon_v2_pokemon (limit:10){
+  query samplePokeAPIquery($limit:Int!,$offset:Int!){
+  pokemon_v2_pokemon {
     id
     name
+    limit:$limit
+    offset:$offset
     pokemon_v2_pokemontypes{
       pokemon_v2_type {
         name
@@ -36,8 +38,26 @@ function POKEMONSPRITE(props){
                       
 
 function Pokecard() {
-  const { loading, data } = useQuery(GET_POKEMON);
-  
+  const { loading, data, fetchMore } = useQuery(GET_POKEMON,{
+    variables:{
+      limit:10,
+      offset:0,
+    },
+    fetchPolicy:"cache-and-network"
+  });
+  const onLoadMore = () => {
+    fetchMore({
+      variables: {
+        offset:data.pokemon_v2_pokemon.length,
+      },
+      updateQuery:(prev,{fetchMoreResult})=>{
+        if(!fetchMoreResult)return prev;
+        return Object.assign({},prev,{
+          pokemon_v2_pokemon:[...prev.pokemon_v2_pokemon,...fetchMoreResult.pokemon_v2_pokemon]
+        })
+      }
+    })
+  }
   return (
     <div className="poke-card-wrapper row">
       {
@@ -73,7 +93,11 @@ function Pokecard() {
         
       }
 
-      {}
+      <div>
+        <button type="button" className="load-more" onClick={()=>{onLoadMore()}}>
+          Load More ..
+        </button>
+      </div>
     </div>
   );
 }
