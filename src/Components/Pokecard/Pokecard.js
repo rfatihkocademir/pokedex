@@ -4,8 +4,8 @@ import "./pokecard-style.css";
 import axios from "axios";
 
 const GET_POKEMON = gql`
-  query samplePokeAPIquery($offset:Int, $limit:Int){
-  pokemon_v2_pokemon (offset:$offset, limit:$limit){
+  query samplePokeAPIquery($limit:Int,$offset:Int){
+  pokemon_v2_pokemon (limit:$limit,offset:$offset){
     id
     name
     pokemon_v2_pokemontypes{
@@ -28,7 +28,6 @@ function POKEMONSPRITE(props){
    axios.get("https://pokeapi.co/api/v2/pokemon/"+props.pokemonID).then((res)=>{
       setSprite(res.data.sprites.front_default);
    })
-   
     return(
       // eslint-disable-next-line jsx-a11y/alt-text
       <img className="poke-sprite" src={sprite}/>
@@ -39,10 +38,31 @@ function Pokecard() {
   const { loading, data ,fetchMore} = useQuery(GET_POKEMON,{
     variables:{
       offset:0,
-      limit:10,
-    }
+      limit:3,
+    },
+    fetchPolicy: "network-only",   // Used for first execution
+    nextFetchPolicy: "cache-first",
+    notifyOnNetworkStatusChange: true
   });
-  
+  function onLoadMore() {
+    fetchMore({
+      variables: {
+        offset:data.pokemon_v2_pokemon.lenght,
+      },
+      updateQuery:(prev,{fetchMoreResult})=>{
+        console.log(prev.pokemon_v2_pokemon);
+        console.log(fetchMoreResult.pokemon_v2_pokemon);
+        if(!fetchMoreResult) return prev;
+        
+        const newResult= Object.assign({},prev,{
+          pokemon_v2_pokemon:[...prev.pokemon_v2_pokemon,...fetchMoreResult.pokemon_v2_pokemon]
+        })
+        console.log(newResult);
+        return newResult;
+        
+      }
+    })
+  }
   return (
     <div className="poke-card-wrapper row">
       {
@@ -78,15 +98,10 @@ function Pokecard() {
         
       }
 
-      <button className="btn btn-primary" onClick={() =>{
-          console.log(data.pokemon_v2_pokemon.length);
-          fetchMore({
-            variables:{
-              limit: data.pokemon_v2_pokemon.length,
-            },
-            
-          })
-      }}>Load more ... </button>
+      <a className="btn btn-primary" onClick={() =>{
+          onLoadMore()
+          
+      }}>Load more ... </a>
     </div>
   );
 }
