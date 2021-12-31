@@ -4,12 +4,10 @@ import "./pokecard-style.css";
 import axios from "axios";
 
 const GET_POKEMON = gql`
-  query samplePokeAPIquery($limit:Int!,$offset:Int!){
-  pokemon_v2_pokemon {
+  query samplePokeAPIquery($offset:Int, $limit:Int){
+  pokemon_v2_pokemon (offset:$offset, limit:$limit){
     id
     name
-    limit:$limit
-    offset:$offset
     pokemon_v2_pokemontypes{
       pokemon_v2_type {
         name
@@ -30,34 +28,21 @@ function POKEMONSPRITE(props){
    axios.get("https://pokeapi.co/api/v2/pokemon/"+props.pokemonID).then((res)=>{
       setSprite(res.data.sprites.front_default);
    })
-   return(
-     // eslint-disable-next-line jsx-a11y/alt-text
-     <img className="poke-sprite" src={sprite}/>
-   )
+   
+    return(
+      // eslint-disable-next-line jsx-a11y/alt-text
+      <img className="poke-sprite" src={sprite}/>
+    )
 }
-                      
 
 function Pokecard() {
-  const { loading, data, fetchMore } = useQuery(GET_POKEMON,{
+  const { loading, data ,fetchMore} = useQuery(GET_POKEMON,{
     variables:{
-      limit:10,
       offset:0,
-    },
-    fetchPolicy:"cache-and-network"
+      limit:10,
+    }
   });
-  const onLoadMore = () => {
-    fetchMore({
-      variables: {
-        offset:data.pokemon_v2_pokemon.length,
-      },
-      updateQuery:(prev,{fetchMoreResult})=>{
-        if(!fetchMoreResult)return prev;
-        return Object.assign({},prev,{
-          pokemon_v2_pokemon:[...prev.pokemon_v2_pokemon,...fetchMoreResult.pokemon_v2_pokemon]
-        })
-      }
-    })
-  }
+  
   return (
     <div className="poke-card-wrapper row">
       {
@@ -93,11 +78,15 @@ function Pokecard() {
         
       }
 
-      <div>
-        <button type="button" className="load-more" onClick={()=>{onLoadMore()}}>
-          Load More ..
-        </button>
-      </div>
+      <button className="btn btn-primary" onClick={() =>{
+          console.log(data.pokemon_v2_pokemon.length);
+          fetchMore({
+            variables:{
+              limit: data.pokemon_v2_pokemon.length,
+            },
+            
+          })
+      }}>Load more ... </button>
     </div>
   );
 }
