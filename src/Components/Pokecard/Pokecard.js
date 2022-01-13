@@ -38,7 +38,7 @@ function Pokecard() {
   const { loading, data ,fetchMore} = useQuery(GET_POKEMON,{
     variables:{
       offset:0,
-      limit:3,
+      limit:10,
     },
     fetchPolicy: "network-only",   // Used for first execution
     nextFetchPolicy: "cache-first",
@@ -47,7 +47,8 @@ function Pokecard() {
   function onLoadMore() {
     fetchMore({
       variables: {
-        offset:data.pokemon_v2_pokemon.lenght,
+        limit:10,
+        offset:data.pokemon_v2_pokemon.length,
       },
       updateQuery:(prev,{fetchMoreResult})=>{
         console.log(prev.pokemon_v2_pokemon);
@@ -72,6 +73,7 @@ function Pokecard() {
             return (
               <div className="poke-card">
                 <div className="poke-name">
+                  <p>{pokemon.id}</p>
                   <p>{pokemon.name.toUpperCase()}</p>
                 </div>
                 <div className="poke-sprite-area">
