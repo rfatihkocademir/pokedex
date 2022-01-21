@@ -15,7 +15,7 @@
     padding-left: 40px;
 }
 .poke-search-area{
-    width: 25%;
+    width: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,7 +24,7 @@
 .poke-search{
     width: 100%;
     height: 65%;
-    border-radius: 50px;
+    border-radius: 10px;
     border:none;
     text-align: start;
     padding-left: 50px;

@@ -5,7 +5,7 @@ import "./pokecard-style.css";
 import axios from "axios";
 
 const GET_POKEMON = gql`
-  query samplePokeAPIquery($limit: Int, $offset: Int) {
+  query PokeAPIquery($limit: Int, $offset: Int) {
     pokemon_v2_pokemon(limit: $limit, offset: $offset) {
       id
       name
@@ -79,7 +79,7 @@ function Pokecard() {
           return (
             <div className="poke-card">
               <div className="poke-name">
-                <p>{pokemon.id}</p>
+                <p className="poke-id">#{pokemon.id}</p>
                 <p>{pokemon.name.toUpperCase()}</p>
               </div>
               <div className="poke-sprite-area">
@@ -105,12 +105,12 @@ function Pokecard() {
       <div>
         {
           !loading?(<a
-            className="btn btn-primary"
+            className="btn btn-primary btn-load"
             onClick={() => {
               onLoadMore();
             }}
           >
-            {!loading ? "LoadMore" : "Loading..."}
+            {!loading ? "Load More Pokemon" : "Loading..."}
           </a>):(<Loading/>)
         }
       </div>
