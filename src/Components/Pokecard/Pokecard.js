@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import "./pokecard-style.css";
@@ -43,7 +44,7 @@ function Pokecard() {
   const { loading, data, fetchMore } = useQuery(GET_POKEMON, {
     variables: {
       offset: 0,
-      limit: 10,
+      limit: 9,
     },
     fetchPolicy: "network-only", // Used for first execution
     nextFetchPolicy: "cache-first",
@@ -52,7 +53,7 @@ function Pokecard() {
   function onLoadMore() {
     fetchMore({
       variables: {
-        limit: 10,
+        limit: 9,
         offset: data.pokemon_v2_pokemon.length,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
@@ -73,11 +74,7 @@ function Pokecard() {
   }
   return (
     <div className="poke-card-wrapper row">
-      {loading ? (
-        <div>
-          <Loading />
-        </div>
-      ) : (
+      {data &&
         data.pokemon_v2_pokemon.map((pokemon) => {
           return (
             <div className="poke-card">
@@ -104,17 +101,19 @@ function Pokecard() {
               </div>
             </div>
           );
-        })
-      )}
-      
-      {loading?"":<a
-        className="btn-load btn"
-        onClick={() => {
-          onLoadMore();
-        }}
-      >
-        Load More...
-      </a>}
+        })}
+      <div>
+        {
+          !loading?(<a
+            className="btn btn-primary"
+            onClick={() => {
+              onLoadMore();
+            }}
+          >
+            {!loading ? "LoadMore" : "Loading..."}
+          </a>):(<Loading/>)
+        }
+      </div>
     </div>
   );
 }
