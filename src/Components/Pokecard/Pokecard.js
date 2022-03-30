@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
-import "./pokecard-style.css";
+import "./pokecard-style.scss";
 import axios from "axios";
 
 const GET_POKEMON = gql`
